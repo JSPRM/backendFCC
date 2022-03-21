@@ -229,6 +229,43 @@ app.get("/api/users/:_id/logs", (req, res) => {
     });
   }
 });
+
+app.get("/api/users/:_id/logs", (req, res) => {
+  let userId = req.params["_id"];
+  let dFrom = req.query.from || "0000-00-00";
+  let dTo = req.query.to || "9999-99-99";
+  let limit = +req.query.limit || 10000;
+  Users.findOne({ _id: userId }, (err, user) => {
+    if (err) return console.error(err);
+    if (!user) {
+      res.json({
+        error: "No existe",
+      });
+    } else {
+      let e1 = user.log.filter((e) => e.date >= dFrom && e.date <= dTo);
+      let e2 = e1.map((e) => ({
+        description: e.description,
+        duration: e.duration,
+        date: e.date,
+      }));
+      let ex = user.exercices
+        .filter((e) => e.date >= dFrom && e.date <= dTo)
+        .map((e) => ({
+          description: e.description,
+          duration: e.duration,
+          date: e.date,
+        }))
+        .slice(0, limit);
+      res.json({
+        count: ex.length,
+        _id: user._id,
+        username: user.username,
+        log: ex,
+      });
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("Escuchando en port: ", PORT);
