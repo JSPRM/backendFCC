@@ -207,12 +207,7 @@ app.get("/api/users", (req, res) => {
 app.get("/api/users/:_id/logs", (req, res) => {
   let id = req.params._id;
   let { from, to, limit } = req.query;
-  if (from) {
-    console.log(from);
-  }
-  if (to) {
-    console.log(to);
-  }
+
   if (limit) {
     console.log(limit);
   }
@@ -224,6 +219,19 @@ app.get("/api/users/:_id/logs", (req, res) => {
           error: "No existe",
         });
       } else {
+        if (from) {
+          let fromDate = new Date(from);
+          result.log = result.log.filter(
+            (exe) => new Date(exe.date) > fromDate
+          );
+        }
+        if (to) {
+          let toDate = new Date(to);
+          result.log = result.log.filter((exe) => new Date(exe.date) < toDate);
+        }
+        if (limit) {
+          result.log = result.log.slice(0, limit);
+        }
         let resObj = {
           username: result.username,
           count: result.log.length,
