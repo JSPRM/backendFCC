@@ -6,6 +6,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bodyParser = require("body-parser");
 const shortid = require("shortid");
+const { serialize } = require("bson");
 require("dotenv").config();
 
 app.use(cors());
@@ -44,6 +45,11 @@ app.get("/urlShortener", (req, res) => {
 app.get("/exerciseTracker", (req, res) => {
   res.sendFile(__dirname + "/views/exerciseTracker.html");
 });
+
+app.get("/fileMetadata", (req, res) => {
+  res.sendFile(__dirname + "/views/fileMetadata.html");
+});
+
 const isValidUrl = (string) => {
   let url;
   try {
@@ -243,6 +249,14 @@ app.get("/api/users/:_id/logs", (req, res) => {
       error: "Id invalida",
     });
   }
+});
+
+app.post("/api/fileanalyse", (req, res) => {
+  res.json({
+    name: "xd",
+    type: "ok",
+    size: "si",
+  });
 });
 
 const PORT = process.env.PORT || 3001;
