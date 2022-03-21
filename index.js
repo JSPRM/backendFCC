@@ -28,7 +28,6 @@ const urlsSchema = new Schema({
   suffix: String,
   total: Number,
   consultado: String,
-  log: [],
 });
 
 const Urls = mongoose.model("Urls", urlsSchema);
@@ -106,6 +105,13 @@ const usersSchema = new Schema({
   username: String,
   total: Number,
   consultado: String,
+  log: [
+    {
+      description: String,
+      duration: Number,
+      date: String,
+    },
+  ],
 });
 
 const Users = mongoose.model("Users", usersSchema);
@@ -148,27 +154,36 @@ app.post("/api/users", (req, res) => {
 app.post("/api/users/:_id/exercises", (req, res) => {
   let id = req.params._id;
   if (id.length > 5) {
-    Users.findOne({ _id: id }, (err, result) => {
-      if (err) return console.error(err);
-      if (!result) {
-        res.json({
-          error: "No existe",
-        });
-      } else {
-        result.log.push({
-          description: req.body.description,
-          duration: parseInt(req.body.duration),
-          date: new Date(),
-        });
-        res.json({
-          username: result.username,
-          description: req.body.description,
-          duration: parseInt(req.body.duration),
-          date: new Date(),
-          _id: result._id,
-        });
+    let fecha = new Date();
+    Users.findOneAndUpdate(
+      { _id: id },
+      { consultado: fecha },
+      (err, result) => {
+        if (err) return console.error(err);
+        if (!result) {
+          res.json({
+            error: "No existe",
+          });
+        } else {
+          result.log.push({
+            description: req.body.description,
+            duration: parseInt(req.body.duration),
+            date: fecha,
+          });
+          result.save((err) => {
+            if (err) return console.error(err);
+            console.log(result);
+            res.json({
+              username: result.username,
+              description: req.body.description,
+              duration: parseInt(req.body.duration),
+              date: fecha,
+              _id: result._id,
+            });
+          });
+        }
       }
-    });
+    );
   } else {
     res.json({
       error: "Id invalida",
@@ -189,6 +204,30 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+app.get("/api/users/:_id/logs", (req, res) => {
+  let id = req.params._id;
+  if (id.length > 5) {
+    Users.findOne({ _id: id }, (err, result) => {
+      if (err) return console.error(err);
+      if (!result) {
+        res.json({
+          error: "No existe",
+        });
+      } else {
+        res.json({
+          username: result.username,
+          count: result.log.length,
+          _id: result._id,
+          log: result.log,
+        });
+      }
+    });
+  } else {
+    res.json({
+      error: "Id invalida",
+    });
+  }
+});
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("Escuchando en port: ", PORT);
