@@ -205,7 +205,7 @@ app.get("/api/users", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
-  let id = req.params._id;
+  const { id, from, to, limit } = req.query;
   if (id.length > 5) {
     Users.findOne({ _id: id }, (err, result) => {
       if (err) return console.error(err);
