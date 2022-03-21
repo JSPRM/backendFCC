@@ -174,11 +174,11 @@ app.post("/api/users/:_id/exercises", (req, res) => {
             if (err) return console.error(err);
             console.log(result);
             res.json({
-              username: result.username,
-              description: req.body.description,
-              duration: parseInt(req.body.duration),
-              date: fecha,
               _id: result._id,
+              username: result.username,
+              date: fecha,
+              duration: parseInt(req.body.duration),
+              description: req.body.description,
             });
           });
         }
