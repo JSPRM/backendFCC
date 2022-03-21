@@ -31,6 +31,7 @@ const urlsSchema = new Schema({
 });
 
 const Urls = mongoose.model("Urls", urlsSchema);
+const defaultDate = () => new Date().toISOString().slice(0, 10);
 
 app.get("/", (req, res) => {
   res.sendFile(__dirname + "/views/index.html");
@@ -154,7 +155,7 @@ app.post("/api/users", (req, res) => {
 app.post("/api/users/:_id/exercises", (req, res) => {
   let id = req.params._id;
   if (id.length > 5) {
-    let fecha = req.body.date || new Date();
+    let fecha = req.body.date || defaultDate();
     Users.findOneAndUpdate(
       { _id: id },
       { consultado: fecha },
@@ -165,18 +166,18 @@ app.post("/api/users/:_id/exercises", (req, res) => {
             error: "No existe",
           });
         } else {
+          let fechaParseada = new Date(fecha).toDateString();
           result.log.push({
             description: req.body.description,
             duration: parseInt(req.body.duration),
-            date: fecha.toDateString(),
+            date: fechaParseada,
           });
           result.save((err) => {
             if (err) return console.error(err);
-            console.log(result);
             res.json({
               _id: result._id,
               username: result.username,
-              date: fecha.toDateString(),
+              date: fechaParseada,
               duration: parseInt(req.body.duration),
               description: req.body.description,
             });
