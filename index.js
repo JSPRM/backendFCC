@@ -137,7 +137,6 @@ app.post("/api/users", (req, res) => {
         result.total += 1;
         result.save((err) => {
           if (err) return console.error(err);
-          console.log(result);
           res.json({
             username: result.username,
             _id: result._id,
@@ -248,7 +247,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
         duration: e.duration,
         date: e.date,
       }));
-      let ex = user.exercices
+      let ex = user.log
         .filter((e) => e.date >= dFrom && e.date <= dTo)
         .map((e) => ({
           description: e.description,
