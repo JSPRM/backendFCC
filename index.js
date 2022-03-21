@@ -236,6 +236,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
   let limit = +req.query.limit || 10000;
   Users.findOne({ _id: userId }, (err, user) => {
     if (err) return console.error(err);
+
     if (!user) {
       res.json({
         error: "No existe",
@@ -255,12 +256,15 @@ app.get("/api/users/:_id/logs", (req, res) => {
           date: e.date,
         }))
         .slice(0, limit);
-      res.json({
+      console.log(user.log);
+      let resObj = {
         count: ex.length,
         _id: user._id,
         username: user.username,
         log: ex,
-      });
+      };
+      console.log(resObj);
+      res.json(resObj);
     }
   });
 });
