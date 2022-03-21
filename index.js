@@ -40,6 +40,9 @@ app.get("/urlShortener", (req, res) => {
   res.sendFile(__dirname + "/views/urlShortener.html");
 });
 
+app.get("/exerciseTracker", (req, res) => {
+  res.sendFile(__dirname + "/views/exerciseTracker.html");
+});
 const isValidUrl = (string) => {
   let url;
   try {
@@ -96,6 +99,74 @@ app.get("/api/shorturl/:suffix", (req, res) => {
       res.redirect(result.original);
     }
   });
+});
+
+const usersSchema = new Schema({
+  username: String,
+  total: Number,
+  consultado: String,
+});
+
+const Users = mongoose.model("Users", usersSchema);
+
+app.post("/api/users", (req, res) => {
+  let user = req.body.username;
+  if (user) {
+    let cons = new Date();
+    Users.findOneAndUpdate(
+      { username: user },
+      { consultado: cons },
+      (error, result) => {
+        if (error) return console.error(error);
+        if (!result) {
+          result = new Users({
+            username: user,
+            total: 0,
+            consultado: cons,
+          });
+        }
+        result.total += 1;
+        result.save((err) => {
+          if (err) return console.error(err);
+          console.log(result);
+          res.json({
+            username: result.username,
+            _id: result._id,
+          });
+        });
+      }
+    );
+  } else {
+    res.json({
+      error: "Usuario invalido",
+    });
+  }
+});
+
+app.post("/api/users/:_id/exercises", (req, res) => {
+  let id = req.params._id;
+  if (id.length > 5) {
+    Users.findOne({ _id: id }, (err, result) => {
+      if (err) return console.error(err);
+      if (!result) {
+        res.json({
+          error: "No existe",
+        });
+      } else {
+        res.json({
+          _id: result._id,
+          username: result.username,
+          date: new Date(),
+          durantion: req.body.duration,
+          description: req.body.description,
+        });
+      }
+    });
+  } else {
+    res.json({
+      error: "Id invalida",
+    });
+  }
 });
 
 const PORT = process.env.PORT || 3001;
