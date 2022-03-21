@@ -230,6 +230,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
+  console.log("I AM IN LOL");
   let userId = req.params["_id"];
   let dFrom = req.query.from || "0000-00-00";
   let dTo = req.query.to || "9999-99-99";
