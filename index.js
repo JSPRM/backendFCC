@@ -205,39 +205,12 @@ app.get("/api/users", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
-  let id = req.params._id;
-  if (id.length > 5) {
-    Users.findOne({ _id: id }, (err, result) => {
-      if (err) return console.error(err);
-      if (!result) {
-        res.json({
-          error: "No existe",
-        });
-      } else {
-        res.json({
-          username: result.username,
-          count: result.log.length,
-          _id: result._id,
-          log: result.log,
-        });
-      }
-    });
-  } else {
-    res.json({
-      error: "Id invalida",
-    });
-  }
-});
-
-app.get("/api/users/:_id/logs", (req, res) => {
-  console.log("I AM IN LOL");
   let userId = req.params["_id"];
   let dFrom = req.query.from || "0000-00-00";
   let dTo = req.query.to || "9999-99-99";
   let limit = +req.query.limit || 10000;
   Users.findOne({ _id: userId }, (err, user) => {
     if (err) return console.error(err);
-
     if (!user) {
       res.json({
         error: "No existe",
