@@ -252,13 +252,17 @@ app.get("/api/users/:_id/logs", (req, res) => {
   }
 });
 
-app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
-  res.json({
-    name: req.file.originalname,
-    type: req.file.mimetype,
-    size: req.file.size,
-  });
-});
+app.post(
+  "/fileMetadata/api/fileanalyse",
+  upload.single("upfile"),
+  (req, res) => {
+    res.json({
+      name: req.file.originalname,
+      type: req.file.mimetype,
+      size: req.file.size,
+    });
+  }
+);
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
