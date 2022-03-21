@@ -208,9 +208,6 @@ app.get("/api/users/:_id/logs", (req, res) => {
   let id = req.params._id;
   let { from, to, limit } = req.query;
 
-  if (limit) {
-    console.log(limit);
-  }
   if (id.length > 5) {
     Users.findOne({ _id: id }, (err, result) => {
       if (err) return console.error(err);
@@ -246,47 +243,6 @@ app.get("/api/users/:_id/logs", (req, res) => {
       error: "Id invalida",
     });
   }
-});
-
-app.get("/api/users/:_id/logs", (req, res) => {
-  console.log(req.params);
-  let userId = req.params["_id"];
-  let dFrom = req.query.from || "0000-00-00";
-  let dTo = req.query.to || "9999-99-99";
-  let limit = +req.query.limit || 10000;
-  Users.findOne({ _id: userId }, (err, user) => {
-    if (err) return console.error(err);
-    if (!user) {
-      res.json({
-        error: "No existe",
-      });
-    } else {
-      let e1 = user.log.filter((e) => e.date >= dFrom && e.date <= dTo);
-      let e2 = e1.map((e) => ({
-        description: e.description,
-        duration: e.duration,
-        date: e.date,
-      }));
-      let ex = user.log
-        .filter((e) => e.date >= dFrom && e.date <= dTo)
-        .map((e) => ({
-          description: e.description,
-          duration: e.duration,
-          date: e.date,
-        }))
-        .slice(0, limit);
-      console.log(user.log);
-      let resObj = {
-        username: user.username,
-        count: ex.length,
-        _id: user._id,
-        log: ex,
-      };
-      console.log("RESS ----");
-      console.log(resObj);
-      res.json(resObj);
-    }
-  });
 });
 
 const PORT = process.env.PORT || 3001;
