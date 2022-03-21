@@ -169,6 +169,19 @@ app.post("/api/users/:_id/exercises", (req, res) => {
   }
 });
 
+app.get("/api/users", (req, res) => {
+  Users.find((err, todo) => {
+    if (err) return console.error(err);
+    if (!todo) {
+      res.json({
+        error: "No hay nada",
+      });
+    } else {
+      res.json(todo);
+    }
+  });
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log("Escuchando en port: ", PORT);
