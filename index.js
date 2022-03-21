@@ -215,12 +215,14 @@ app.get("/api/users/:_id/logs", (req, res) => {
         });
       } else {
         console.log(result);
-        res.json({
+        console.log("RESSS");
+        let resObj = {
           username: result.username,
           count: result.log.length,
           _id: result._id,
           log: result.log,
-        });
+        };
+        res.json(resObj);
       }
     });
   } else {
