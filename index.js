@@ -222,6 +222,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
           _id: result._id,
           log: result.log,
         };
+        console.log(resObj);
         res.json(resObj);
       }
     });
