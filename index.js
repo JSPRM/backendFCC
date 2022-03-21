@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bodyParser = require("body-parser");
 const shortid = require("shortid");
-const { serialize } = require("bson");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 require("dotenv").config();
 
 app.use(cors());
@@ -251,11 +252,11 @@ app.get("/api/users/:_id/logs", (req, res) => {
   }
 });
 
-app.post("/api/fileanalyse", (req, res) => {
+app.post("/api/fileanalyse", upload.single("upfile"), (req, res) => {
   res.json({
-    name: "xd",
-    type: "ok",
-    size: "si",
+    name: req.file.originalname,
+    type: req.file.mimetype,
+    size: req.file.size,
   });
 });
 
