@@ -155,7 +155,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
   let id = req.params._id;
   if (id.length > 5) {
     let fecha = new Date();
-    fecha = fecha.toDateString();
+    console.log(fecha.toDateString());
     Users.findOneAndUpdate(
       { _id: id },
       { consultado: fecha },
@@ -169,7 +169,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
           result.log.push({
             description: req.body.description,
             duration: parseInt(req.body.duration),
-            date: fecha,
+            date: fecha.toDateString(),
           });
           result.save((err) => {
             if (err) return console.error(err);
@@ -177,7 +177,7 @@ app.post("/api/users/:_id/exercises", (req, res) => {
             res.json({
               _id: result._id,
               username: result.username,
-              date: fecha,
+              date: fecha.toDateString(),
               duration: parseInt(req.body.duration),
               description: req.body.description,
             });
