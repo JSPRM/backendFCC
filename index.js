@@ -205,7 +205,17 @@ app.get("/api/users", (req, res) => {
 });
 
 app.get("/api/users/:_id/logs", (req, res) => {
-  const { id, from, to, limit } = req.query;
+  let id = req.params._id;
+  let { from, to, limit } = req.query;
+  if (from) {
+    console.log(from);
+  }
+  if (to) {
+    console.log(to);
+  }
+  if (limit) {
+    console.log(limit);
+  }
   if (id.length > 5) {
     Users.findOne({ _id: id }, (err, result) => {
       if (err) return console.error(err);
@@ -214,15 +224,12 @@ app.get("/api/users/:_id/logs", (req, res) => {
           error: "No existe",
         });
       } else {
-        console.log(result);
-        console.log("RESSS");
         let resObj = {
           username: result.username,
           count: result.log.length,
           _id: result._id,
           log: result.log,
         };
-        console.log(resObj);
         res.json(resObj);
       }
     });
