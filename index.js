@@ -230,6 +230,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
           date: e.date,
         }))
         .slice(0, limit);
+      console.log("RES ---");
       console.log(user.log);
       let resObj = {
         count: ex.length,
