@@ -154,8 +154,7 @@ app.post("/api/users", (req, res) => {
 app.post("/api/users/:_id/exercises", (req, res) => {
   let id = req.params._id;
   if (id.length > 5) {
-    let fecha = new Date();
-    console.log(fecha.toDateString());
+    let fecha = req.body.date || new Date();
     Users.findOneAndUpdate(
       { _id: id },
       { consultado: fecha },
