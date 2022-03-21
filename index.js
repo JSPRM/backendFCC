@@ -214,6 +214,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
           error: "No existe",
         });
       } else {
+        console.log(result);
         res.json({
           username: result.username,
           count: result.log.length,
