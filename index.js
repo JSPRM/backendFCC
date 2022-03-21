@@ -203,7 +203,7 @@ app.get("/api/users", (req, res) => {
     }
   });
 });
-/*
+
 app.get("/api/users/:_id/logs", (req, res) => {
   let id = req.params._id;
   if (id.length > 5) {
@@ -228,7 +228,7 @@ app.get("/api/users/:_id/logs", (req, res) => {
     });
   }
 });
-*/
+
 app.get("/api/users/:_id/logs", (req, res) => {
   console.log(req.params);
   let userId = req.params["_id"];
