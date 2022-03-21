@@ -28,6 +28,7 @@ const urlsSchema = new Schema({
   suffix: String,
   total: Number,
   consultado: String,
+  log: [],
 });
 
 const Urls = mongoose.model("Urls", urlsSchema);
@@ -123,6 +124,7 @@ app.post("/api/users", (req, res) => {
             username: user,
             total: 0,
             consultado: cons,
+            log: [],
           });
         }
         result.total += 1;
@@ -153,12 +155,17 @@ app.post("/api/users/:_id/exercises", (req, res) => {
           error: "No existe",
         });
       } else {
-        res.json({
-          _id: result._id,
-          username: result.username,
-          date: new Date(),
-          durantion: req.body.duration,
+        result.log.push({
           description: req.body.description,
+          duration: parseInt(req.body.duration),
+          date: new Date(),
+        });
+        res.json({
+          username: result.username,
+          description: req.body.description,
+          duration: parseInt(req.body.duration),
+          date: new Date(),
+          _id: result._id,
         });
       }
     });
